@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tiến Bằng - Hội Xuân Bính Ngọ 2026 - Mã Đáo Thành Công</title>
+    <style>
+        :root { --gold-grad: linear-gradient(to bottom, #fff7ad 0%, #ffa700 50%, #ff4600 100%); --red-deep: #8b0000; }
+        body {
+            margin: 0; background: #000; color: #fff;
+            font-family: 'Times New Roman', serif;
+            overflow: hidden; height: 100vh; display: flex;
+            justify-content: center; align-items: center; touch-action: none;
+        }
+
+        .bg-overlay {
+            position: fixed; inset: 0;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.9)), 
+                        url('https://png.pngtree.com/thumb_back/fh260/background/20251127/pngtree-2026-year-of-the-horse-red-and-gold-horse-background-image_20357168.webp');
+            background-size: cover; background-position: center;
+            z-index: -1; filter: saturate(1.5);
+        }
+
+        canvas { position: absolute; top: 0; left: 0; pointer-events: none; }
+        #canvas-fireworks { z-index: 5; }
+        #canvas-petals { z-index: 2500; }
+
+        .art-title {
+            display: none; position: fixed; top: 5%; width: 100%; text-align: center;
+            font-size: 3.5rem; font-weight: bold; z-index: 10;
+            background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(255,165,0,0.8));
+            font-family: 'Playfair Display', serif; text-transform: uppercase;
+        }
+
+        #intro-screen {
+            position: fixed; z-index: 5000; inset: 0; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: radial-gradient(circle, rgba(0,0,0,0.3) 0%, #000 100%);
+        }
+
+        #timer {
+            font-size: 18rem; font-weight: 900; background: var(--gold-grad);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px #ff4600); line-height: 1;
+        }
+
+        .touch-text {
+            font-size: 1.8rem; color: #ffd700; letter-spacing: 8px;
+            text-transform: uppercase; animation: shine 2s infinite;
+            border: 2px solid #ffd700; padding: 15px 40px; border-radius: 50px;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
+        }
+        @keyframes shine { 0% { opacity: 0.4; box-shadow: 0 0 0px #ffd700; } 50% { opacity: 1; box-shadow: 0 0 30px #ffd700; } 100% { opacity: 0.4; box-shadow: 0 0 0px #ffd700; } }
+
+        #name-input-box {
+            display: none; background: rgba(139,0,0,0.9); padding: 40px;
+            border: 5px double #ffd700; border-radius: 30px;
+            box-shadow: 0 0 50px rgba(255,0,0,0.5); z-index: 6000; text-align: center;
+        }
+        #name-input-box input {
+            padding: 15px; font-size: 1.5rem; border-radius: 10px; border: 2px solid #ffd700;
+            background: #000; color: #fff; text-align: center; width: 250px; margin-bottom: 25px;
+        }
+
+        #shaker-container {
+            display: none; position: absolute; width: 140px; height: 250px;
+            z-index: 1000; cursor: grab; flex-direction: column; align-items: center;
+        }
+        #tube {
+            width: 130px; height: 180px; background: #8b0000; border: 4px solid #ffd700;
+            border-radius: 10px 10px 60px 60px; position: relative; display: flex;
+            justify-content: center; box-shadow: 0 30px 60px rgba(0,0,0,1);
+        }
+        #tube::after { content: "🧧"; position: absolute; top: 40%; font-size: 2rem; opacity: 0.3; }
+        .stick { width: 10px; height: 110px; background: linear-gradient(to bottom, #ff0000, #440000); border: 1px solid #ffd700; position: absolute; top: -55px; border-radius: 3px; }
+
+        .lixi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .lixi-item {
+            width: 80px; height: 140px; 
+            background: linear-gradient(145deg, #d40000 0%, #8b0000 100%);
+            border: 2px solid #ffd700; border-radius: 8px; cursor: pointer;
+            position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        
+        .lixi-item::before {
+            content: "🌸"; font-size: 2rem; position: absolute; top: 10px; color: #ffeb3b;
+            filter: drop-shadow(0 0 5px gold);
+        }
+        .lixi-item::after {
+            content: "Tài Lộc"; position: absolute; bottom: 15px; width: 100%;
+            text-align: center; font-size: 0.8rem; color: #ffd700; 
+            text-transform: uppercase; font-weight: bold; letter-spacing: 1px;
+        }
+
+        .lixi-item:hover { transform: scale(1.1) rotate(3deg); box-shadow: 0 0 30px #ffd700; }
+        .lixi-item:active { transform: scale(0.9); }
+
+        .btn-gold {
+            padding: 15px 35px; background: var(--gold-grad);
+            color: #000; border: none; border-radius: 30px; font-weight: bold; 
+            cursor: pointer; font-size: 1.1rem; text-transform: uppercase;
+        }
+
+        .shaking { animation: shake 0.1s infinite; }
+        @keyframes shake { 0% { transform: rotate(0deg); } 50% { transform: rotate(5deg); } 100% { transform: rotate(-5deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="bg-overlay"></div>
+    <audio id="bg-music" loop src="nhactet.mp3"></audio>
+
+    <div id="intro-screen" onclick="showNameInput()">
+        <div id="timer">5</div>
+        <div class="touch-text">Chạm để khai xuân</div>
+    </div>
+
+    <div id="name-input-box">
+        <h2 style="color: #ffd700; margin-top:0;">QUÝ DANH TÂN NIÊN</h2>
+        <input type="text" id="username" placeholder="Nhập tên..." maxlength="15"><br>
+        <button class="btn-gold" onclick="startCountdown()">KHAI HỘI BÍNH NGỌ</button>
+    </div>
+
+    <h1 id="happynewyear" class="art-title">Xuân Bính Ngọ 2026</h1>
+
+    <div id="shaker-container">
+        <div id="tube"><div id="sticks-container"></div></div>
+        <button id="draw-btn" class="btn-gold" style="display:none; margin-top:20px;" onclick="drawCard()">RÚT QUẺ ĐẦU NĂM</button>
+    </div>
+
+    <div id="result-card" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:340px; background:#fff; color:#000; padding:40px; border:10px double #d40000; text-align:center; z-index:2000; border-radius:20px;">
+        <p style="font-style:italic">Gửi: <b id="display-name" style="color:#d40000"></b></p>
+        <h2 id="card-title" style="color:#8b0000; border-bottom:2px solid #ffd700; padding-bottom:10px;"></h2>
+        <p id="card-body" style="line-height:1.6; font-size:1.1rem;"></p>
+        <button class="btn-gold" onclick="showLixiScreen()">NHẬN LỘC LÌ XÌ</button>
+    </div>
+
+    <div id="lixi-screen" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:3000; flex-direction:column; align-items:center; justify-content:center;">
+        <h2 style="color:#ffd700; margin-bottom:30px; text-shadow: 0 0 10px gold;">🧧 HÁI HOA TÀI LỘC 🧧</h2>
+        <div class="lixi-grid" id="lixi-container"></div>
+    </div>
+
+    <div id="money-popup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:4000; text-align:center; width:100%;">
+        <div style="font-size:2rem; color:#fff;">Lộc Tài Của Bạn:</div>
+        <div id="money-amount" style="font-size:6rem; color:#ffd700; font-weight:900; text-shadow: 0 0 30px #ff0000;"></div>
+        <button class="btn-gold" onclick="location.reload()">CHÚC MỪNG NĂM MỚI</button>
+    </div>
+
+    <canvas id="canvas-fireworks"></canvas>
+    <canvas id="canvas-petals"></canvas>
+
+    <script>
+        let userName = "";
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function showNameInput() {
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('name-input-box').style.display = 'block';
+            document.getElementById('bg-music').play().catch(() => {});
+        }
+
+        function startCountdown() {
+            userName = document.getElementById('username').value || "Tri Kỷ";
+            document.getElementById('display-name').innerText = userName;
+            document.getElementById('name-input-box').style.display = 'none';
+            document.getElementById('intro-screen').style.display = 'flex';
+            document.querySelector('.touch-text').style.display = 'none';
+
+            let t = 5;
+            const iv = setInterval(() => {
+                document.getElementById('timer').innerText = --t;
+                if(t <= 0) {
+                    clearInterval(iv);
+                    document.getElementById('intro-screen').style.display = 'none';
+                    document.getElementById('happynewyear').style.display = 'block';
+                    initFireworks();
+                    const sc = document.getElementById('shaker-container');
+                    sc.style.display = 'flex'; sc.style.left = '50%'; sc.style.top = '40%';
+                    sc.style.transform = 'translate(-50%, -50%)';
+                }
+            }, 1000);
+        }
+
+        const sticksContainer = document.getElementById('sticks-container');
+        for (let i = 0; i < 15; i++) {
+            const s = document.createElement('div'); s.className = 'stick';
+            s.style.transform = `rotate(${(i-7)*4}deg)`; s.style.left = `${40+(i*2)}px`;
+            sticksContainer.appendChild(s);
+        }
+
+        const shaker = document.getElementById('shaker-container');
+        const tube = document.getElementById('tube');
+        let isDown = false, offset = {x:0, y:0}, lastX, lastY, lastT;
+
+        const start = (e) => {
+            isDown = true;
+            const cx = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const cy = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            offset.x = cx - shaker.offsetLeft; offset.y = cy - shaker.offsetTop;
+            lastX = cx; lastY = cy; lastT = Date.now();
+        };
+
+        const move = (e) => {
+            if (!isDown) return;
+            const cx = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const cy = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            shaker.style.left = cx - offset.x + 'px';
+            shaker.style.top = cy - offset.y + 'px';
+            const speed = Math.sqrt(Math.pow(cx-lastX,2) + Math.pow(cy-lastY,2)) / (Date.now()-lastT);
+            if (speed > 0.7) { tube.classList.add('shaking'); playTone(120, 'square', 0.05); }
+            else tube.classList.remove('shaking');
+            lastX = cx; lastY = cy; lastT = Date.now();
+        };
+
+        window.addEventListener('mousemove', move); window.addEventListener('mouseup', () => {isDown=false; tube.classList.remove('shaking'); document.getElementById('draw-btn').style.display='block';});
+        shaker.addEventListener('mousedown', start);
+        shaker.addEventListener('touchstart', start); window.addEventListener('touchmove', move); window.addEventListener('touchend', () => {isDown=false; tube.classList.remove('shaking'); document.getElementById('draw-btn').style.display='block';});
+
+        function drawCard() {
+            const ws = [
+                {t: "QUẺ ĐẠI CÁT: MÃ ĐÁO THÀNH CÔNG", b: "Ngựa tốt chạy đường dài, năm Bính Ngọ này vận thế của bạn bùng nổ mạnh mẽ. Sự nghiệp thăng tiến như diều gặp gió, tài lộc dồi dào gõ cửa quanh năm. Vạn sự hanh thông, gia đạo an khang thịnh vượng!"},
+                {t: "QUẺ THƯỢNG CÁT: PHÚC TỰA ĐÔNG HẢI", b: "Năm mới đón nhận sinh khí mới, sức khỏe dẻo dai như linh mã. Mọi khó khăn đều có quý nhân phù trợ, tình duyên viên mãn, học hành thi cử đỗ đạt cao. Một năm đầy ắp tiếng cười và những thành tựu rực rỡ đang chờ đón bạn."},
+                {t: "QUẺ TẤN LỘC: KIM NGÂN MÃN ĐƯỜNG", b: "Tiền vô như nước, bạc vàng đầy kho. Năm 2026 chính là thời điểm vàng để bạn bứt phá trong kinh doanh. Tâm thế vững vàng, ý chí sắt đá sẽ giúp bạn gặt hái những hợp đồng lớn và những khoản lợi nhuận khổng lồ."}
+            ];
+            const r = ws[Math.floor(Math.random()*ws.length)];
+            document.getElementById('card-title').innerText = r.t;
+            document.getElementById('card-body').innerText = r.b;
+            document.getElementById('result-card').style.display = 'block';
+            shaker.style.display = 'none';
+            startPetals();
+        }
+
+        function showLixiScreen() {
+            document.getElementById('result-card').style.display = 'none';
+            document.getElementById('lixi-screen').style.display = 'flex';
+            const container = document.getElementById('lixi-container');
+            if(container.children.length === 0) {
+                for(let i=0; i<8; i++) {
+                    const item = document.createElement('div'); item.className = 'lixi-item';
+                    item.onclick = (e) => openLixi(e); container.appendChild(item);
+                }
+            }
+        }
+
+        function openLixi(e) {
+            const rect = e.target.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            if(window.fireCustomBurst) {
+                window.fireCustomBurst(centerX, centerY, '#FFD700'); 
+                window.fireCustomBurst(centerX, centerY, '#FF69B4'); 
+            }
+
+            setTimeout(() => {
+                const nums = [13688, 16888, 26666, 38888, 66666, 68686, 79799, 82828];
+                const money = nums[Math.floor(Math.random()*nums.length)];
+                document.getElementById('money-amount').innerText = money.toLocaleString() + "đ";
+                document.getElementById('lixi-screen').style.display = 'none';
+                document.getElementById('money-popup').style.display = 'block';
+                playTone(1000, 'sine', 0.3);
+            }, 500);
+        }
+
+        function playTone(f, t, d) {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+            o.type = t; o.frequency.setValueAtTime(f, audioCtx.currentTime);
+            g.gain.setValueAtTime(0.03, audioCtx.currentTime);
+            o.connect(g); g.connect(audioCtx.destination);
+            o.start(); o.stop(audioCtx.currentTime + d);
+        }
+
+        // --- HỆ THỐNG PHÁO HOA NÂNG CAO ---
+        function initFireworks() {
+            const canvas = document.getElementById('canvas-fireworks');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let particles = [];
+            let rockets = [];
+
+            class Rocket {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = canvas.height;
+                    this.targetY = Math.random() * (canvas.height * 0.5);
+                    this.speed = Math.random() * 3 + 5;
+                    this.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+                }
+                update() {
+                    this.y -= this.speed;
+                    if (this.y <= this.targetY) {
+                        explode(this.x, this.y, this.color);
+                        return false;
+                    }
+                    return true;
+                }
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.fillRect(this.x, this.y, 2, 8);
+                }
+            }
+
+            class Particle {
+                constructor(x, y, color, vx, vy) {
+                    this.x = x; this.y = y; this.color = color;
+                    this.vx = vx; this.vy = vy;
+                    this.alpha = 1;
+                    this.friction = 0.95;
+                    this.gravity = 0.1;
+                }
+                update() {
+                    this.vx *= this.friction;
+                    this.vy *= this.friction;
+                    this.vy += this.gravity;
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.alpha -= 0.015;
+                }
+                draw() {
+                    ctx.globalAlpha = this.alpha;
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function explode(x, y, color) {
+                const count = 100;
+                const pattern = Math.random();
+                for (let i = 0; i < count; i++) {
+                    const angle = (Math.PI * 2 / count) * i;
+                    let speed = Math.random() * 10 + 2;
+                    if(pattern > 0.8) speed = (i % 2 === 0) ? 10 : 2; // Hình sao
+                    particles.push(new Particle(x, y, color, Math.cos(angle) * speed, Math.sin(angle) * speed));
+                }
+                playTone(200, 'sine', 0.1);
+            }
+
+            window.fireCustomBurst = (x, y, color) => {
+                for (let i = 0; i < 40; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 8;
+                    particles.push(new Particle(x, y, color, Math.cos(angle) * speed, Math.sin(angle) * speed));
+                }
+            };
+
+            function animate() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                if (Math.random() < 0.05) rockets.push(new Rocket());
+
+                rockets = rockets.filter(r => {
+                    const active = r.update();
+                    if (active) r.draw();
+                    return active;
+                });
+
+                particles = particles.filter(p => {
+                    p.update();
+                    p.draw();
+                    return p.alpha > 0;
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        function startPetals() {
+            const pC = document.getElementById('canvas-petals'); const pCtx = pC.getContext('2d');
+            pC.width = innerWidth; pC.height = innerHeight;
+            let pts = [];
+            for(let i=0; i<40; i++) pts.push({x:Math.random()*innerWidth,y:-20,s:Math.random()*6+6,v:Math.random()*1+1,ang:Math.random()*360});
+            function anim() {
+                requestAnimationFrame(anim);
+                pCtx.clearRect(0,0,pC.width,pC.height);
+                pts.forEach(p => {
+                    p.y += p.v; p.ang += 1.5; p.x += Math.sin(p.y/50);
+                    pCtx.save(); pCtx.translate(p.x,p.y); pCtx.rotate(p.ang*Math.PI/180);
+                    pCtx.fillStyle='#ffb7c5'; pCtx.beginPath(); pCtx.moveTo(0,0);
+                    pCtx.bezierCurveTo(-p.s,-p.s,-p.s,p.s/2,0,p.s); pCtx.bezierCurveTo(p.s,p.s/2,p.s,-p.s,0,0);
+                    pCtx.fill(); pCtx.restore();
+                    if(p.y > innerHeight) p.y = -20;
+                });
+            }
+            anim();
+        }
+    </script>
+</body>
+</html>
