@@ -21,7 +21,6 @@
             position: fixed; inset: 0;
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.9)), 
                         url('https://png.pngtree.com/thumb_back/fh260/background/20251127/pngtree-2026-year-of-the-horse-red-and-gold-horse-background-image_20357168.webp');
-            /* CẬP NHẬT: Đảm bảo nhìn được toàn cảnh background và tương thích thiết bị */
             background-size: cover; 
             background-repeat: no-repeat;
             background-position: center;
@@ -30,7 +29,6 @@
             transition: transform 0.3s ease;
         }
 
-        /* THÊM MỚI: Xoay background khi màn hình dọc để thấy toàn cảnh */
         @media screen and (orientation: portrait) {
             .bg-overlay {
                 width: 100vh;
@@ -61,13 +59,12 @@
         }
 
         #timer {
-            display: none; /* MẶC ĐỊNH ẨN SỐ */
+            display: none; 
             font-size: 18rem; font-weight: 900; background: var(--gold-grad);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 30px #ff4600); line-height: 1;
         }
 
-        /* STYLE THÊM MỚI CHO CHỮ CHÚC MỪNG NĂM MỚI */
         #wish-text {
             display: none;
             font-size: 2.5rem;
@@ -128,10 +125,12 @@
         .stick { 
             width: 10px; height: 110px; background: linear-gradient(to bottom, #ff0000, #440000); 
             border: 1px solid #ffd700; position: absolute; top: -55px; border-radius: 3px; 
-            transition: transform 0.1s ease-out; /* Mượt mà khi lắc */
+            transition: transform 0.1s ease-out; 
         }
 
-        .lixi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        /* WEB VIEW / DESKTOP */
+        .lixi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; max-width: 90vw; }
+        
         .lixi-item {
             width: 80px; height: 140px; 
             background: linear-gradient(145deg, #d40000 0%, #8b0000 100%);
@@ -151,6 +150,17 @@
             cursor: pointer; font-size: 1.1rem; text-transform: uppercase;
         }
 
+        #draw-btn {
+            font-family: 'Tahoma', sans-serif;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            letter-spacing: 0.5px;
+            width: 220px; 
+            padding: 12px 20px;
+            margin-top: 30px !important;
+            box-shadow: 0 5px 15px rgba(255,165,0,0.4);
+        }
+
         .shaking { animation: shake 0.1s infinite; }
         @keyframes shake { 0% { transform: rotate(0deg); } 50% { transform: rotate(5deg); } 100% { transform: rotate(-5deg); } }
 
@@ -161,11 +171,10 @@
         .open-curtain .curtain-left { transform: translateX(-100%); }
         .open-curtain .curtain-right { transform: translateX(100%); }
 
-        /* --- PHẦN THÊM MỚI: HIỆU ỨNG PHÓNG TO THU NHỎ LẶP LẠI CHO CON SỐ --- */
         #money-amount { 
             font-size: 5rem; color: #ffd700; font-weight: 900; 
             text-shadow: 0 0 30px #ff0000; 
-            animation: pulse-zoom 1.5s ease-in-out infinite; /* Áp dụng hiệu ứng */
+            animation: pulse-zoom 1.5s ease-in-out infinite;
             display: block;
         }
 
@@ -174,21 +183,30 @@
             50% { transform: scale(1.2); filter: drop-shadow(0 0 50px #ffd700); }
             100% { transform: scale(1); filter: drop-shadow(0 0 20px #ff0000); }
         }
-        /* ------------------------------------------------------------------- */
 
-        /* TÍNH NĂNG THÍCH ỨNG (RESPONSIVE) BỔ SUNG */
         @media screen and (max-width: 768px) {
             .art-title { font-size: 2rem; top: 8%; }
             #timer { font-size: 10rem; }
             #wish-text { font-size: 1.5rem; }
             .touch-text { font-size: 1.2rem; letter-spacing: 3px; padding: 10px 25px; }
             #name-input-box, #result-card { width: 85%; padding: 20px; box-sizing: border-box; }
-            .lixi-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            
+            .lixi-grid { 
+                grid-template-columns: repeat(4, 1fr); 
+                gap: 8px; 
+                width: 95vw;
+                justify-items: center;
+            }
+            .lixi-item { width: 60px; height: 100px; }
+            .lixi-item::before { font-size: 1.2rem; }
+            .lixi-item::after { font-size: 0.6rem; bottom: 8px; }
+
             #money-amount { font-size: 3.5rem; }
             #shaker-container { 
                 transform: translate(-50%, -50%) scale(0.8);
                 top: 55%; 
             }
+            #draw-btn { font-size: 0.8rem; width: 180px; }
         }
         @media screen and (max-height: 600px) {
             .art-title { font-size: 1.5rem; }
@@ -243,7 +261,7 @@
 
     <div id="shaker-container">
         <div id="tube"><div id="sticks-container"></div></div>
-        <button id="draw-btn" class="btn-gold" style="display:none; margin-top:20px;" onclick="drawCard()">RÚT QUẺ ĐẦU NĂM</button>
+        <button id="draw-btn" class="btn-gold" style="display:none;" onclick="drawCard()">CẦM BÌNH LẮC ĐỂ<br>RÚT QUẺ ĐẦU NĂM NHA</button>
     </div>
 
     <div id="result-card" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:320px; background:#fff; color:#000; padding:30px; border:10px double #d40000; text-align:center; z-index:2000; border-radius:20px;">
@@ -268,7 +286,6 @@
     <canvas id="canvas-petals"></canvas>
 
     <script>
-        // Chặn phím tắt
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85)) e.preventDefault();
             if (e.keyCode === 123) e.preventDefault();
@@ -283,7 +300,6 @@
             document.getElementById('bg-music').play().catch(() => {});
         }
 
-        // --- HÀM ADMIN CẢI TIẾN ---
         function toggleAdminPanel() {
             const container = document.getElementById('admin-list-container');
             if (container.style.display === 'block') {
@@ -356,7 +372,6 @@
             document.getElementById('intro-screen').style.display = 'flex';
             document.querySelector('.touch-text').style.display = 'none';
             
-            // HIỆN SỐ VÀ CHỮ CHÚC MỪNG KHI BẮT ĐẦU CHẠY
             const timerEl = document.getElementById('timer');
             const wishEl = document.getElementById('wish-text');
             timerEl.style.display = 'block';
@@ -369,7 +384,7 @@
                 if (t >= 0) timerEl.innerText = t;
                 if(t === 0) {
                     clearInterval(iv);
-                    wishEl.style.display = 'none'; // Ẩn chữ sau khi đếm xong
+                    wishEl.style.display = 'none';
                     const curtainContainer = document.getElementById('curtain-container');
                     curtainContainer.style.display = 'block';
                     setTimeout(() => {
@@ -379,7 +394,6 @@
                         initFireworks();
                         const sc = document.getElementById('shaker-container');
                         sc.style.display = 'flex';
-                        // Căn chỉnh vị trí thích ứng khi bắt đầu hiện ra
                         sc.style.left = '50%'; 
                         sc.style.top = window.innerWidth < 768 ? '55%' : '50%'; 
                         sc.style.transform = 'translate(-50%, -50%)';
@@ -388,7 +402,6 @@
             }, 1000);
         }
 
-        // Logic gieo quẻ & Lì xì
         const sticksContainer = document.getElementById('sticks-container');
         for (let i = 0; i < 15; i++) {
             const s = document.createElement('div'); s.className = 'stick';
@@ -418,7 +431,6 @@
             const dy = cy - lastY;
             const speed = Math.sqrt(dx*dx + dy*dy) / (Date.now() - lastT);
 
-            // HIỆU ỨNG MỚI: Quẻ lắc lư bên trong
             const sticks = document.querySelectorAll('.stick');
             sticks.forEach((s, idx) => {
                 const randomSwing = (Math.random() - 0.5) * speed * 30;
@@ -445,7 +457,6 @@
             isDown=false; 
             tube.classList.remove('shaking'); 
             if(document.getElementById('draw-btn')) document.getElementById('draw-btn').style.display='block';
-            // Trả quẻ về vị trí cũ
             document.querySelectorAll('.stick').forEach((s, idx) => {
                 s.style.transform = `rotate(${(idx - 7) * 4}deg) translateY(0px)`;
             });
@@ -487,7 +498,7 @@
             document.getElementById('lixi-screen').style.display = 'flex';
             const container = document.getElementById('lixi-container');
             if(container.children.length === 0) {
-                for(let i=0; i<8; i++) {
+                for(let i=0; i<8; i++) { // Thay đổi ở đây: 8 bao lì xì
                     const item = document.createElement('div'); item.className = 'lixi-item';
                     item.onclick = (e) => openLixi(e); container.appendChild(item);
                 }
@@ -518,7 +529,6 @@
             o.start(); o.stop(audioCtx.currentTime + d);
         }
 
-        // --- CẬP NHẬT HIỆU ỨNG PHÁO HOA CAO CẤP ---
         function initFireworks() {
             const canvas = document.getElementById('canvas-fireworks'); const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -532,12 +542,11 @@
                     this.targetY = isMega ? (Math.random() * canvas.height * 0.2 + 50) : (Math.random() * (canvas.height * 0.4) + 100); 
                     this.speed = isMega ? 8 : (Math.random() * 4 + 4); 
                     this.color = isMega ? `hsl(${Math.random() * 360}, 100%, 70%)` : `hsl(${Math.random() * 360}, 100%, 60%)`;
-                    this.history = []; // Để vẽ đuôi lửa
+                    this.history = []; 
                 }
                 update() { 
                     this.history.push({x: this.x, y: this.y});
                     if (this.history.length > 10) this.history.shift();
-                    
                     this.y -= this.speed; 
                     if (this.y <= this.targetY) { 
                         explode(this.x, this.y, this.color, this.isMega); 
@@ -546,7 +555,6 @@
                     return true; 
                 }
                 draw() { 
-                    // Vẽ đuôi lửa chạy lên
                     ctx.beginPath();
                     ctx.moveTo(this.x, this.y);
                     for(let i=this.history.length-1; i>=0; i--) {
@@ -555,7 +563,6 @@
                     ctx.strokeStyle = this.color;
                     ctx.lineWidth = this.isMega ? 3 : 1.5;
                     ctx.stroke();
-
                     ctx.save();
                     ctx.shadowBlur = 10;
                     ctx.shadowColor = this.color;
@@ -635,16 +642,20 @@
             const pC = document.getElementById('canvas-petals'); const pCtx = pC.getContext('2d');
             pC.width = innerWidth; pC.height = innerHeight;
             let pts = [];
-            for(let i=0; i<40; i++) pts.push({x:Math.random()*innerWidth,y:-20,s:Math.random()*6+6,v:Math.random()*1+1,ang:Math.random()*360});
+            for(let i=0; i<40; i++) pts.push({
+                x: Math.random() * innerWidth, 
+                y: Math.random() * innerHeight, 
+                s: Math.random() * 2 + 1,
+                v: Math.random() * 1 + 0.5,
+                a: Math.random() * Math.PI
+            });
             function anim() {
                 pCtx.clearRect(0,0,pC.width,pC.height);
                 pts.forEach(p => {
-                    p.y += p.v; p.ang += 1.5; p.x += Math.sin(p.y/50);
-                    pCtx.save(); pCtx.translate(p.x,p.y); pCtx.rotate(p.ang*Math.PI/180);
-                    pCtx.fillStyle='#ffb7c5'; pCtx.beginPath(); pCtx.moveTo(0,0);
-                    pCtx.bezierCurveTo(-p.s,-p.s,-p.s,p.s/2,0,p.s); pCtx.bezierCurveTo(p.s,p.s/2,p.s,-p.s,0,0);
-                    pCtx.fill(); pCtx.restore();
-                    if(p.y > innerHeight) p.y = -20;
+                    p.y += p.v; p.x += Math.sin(p.a) * 0.5; p.a += 0.02;
+                    if(p.y > pC.height) p.y = -10;
+                    pCtx.fillStyle = '#ffb7c5'; pCtx.beginPath();
+                    pCtx.ellipse(p.x, p.y, p.s*1.5, p.s, p.a, 0, Math.PI*2); pCtx.fill();
                 });
                 requestAnimationFrame(anim);
             }
