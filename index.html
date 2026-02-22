@@ -21,8 +21,25 @@
             position: fixed; inset: 0;
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.9)), 
                         url('https://png.pngtree.com/thumb_back/fh260/background/20251127/pngtree-2026-year-of-the-horse-red-and-gold-horse-background-image_20357168.webp');
-            background-size: cover; background-position: center;
+            /* CẬP NHẬT: Đảm bảo nhìn được toàn cảnh background và tương thích thiết bị */
+            background-size: cover; 
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: #000; 
             z-index: -1; filter: saturate(1.5);
+            transition: transform 0.3s ease;
+        }
+
+        /* THÊM MỚI: Xoay background khi màn hình dọc để thấy toàn cảnh */
+        @media screen and (orientation: portrait) {
+            .bg-overlay {
+                width: 100vh;
+                height: 100vw;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(90deg);
+                background-size: cover;
+            }
         }
 
         canvas { position: absolute; top: 0; left: 0; pointer-events: none; }
@@ -44,9 +61,22 @@
         }
 
         #timer {
+            display: none; /* MẶC ĐỊNH ẨN SỐ */
             font-size: 18rem; font-weight: 900; background: var(--gold-grad);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 30px #ff4600); line-height: 1;
+        }
+
+        /* STYLE THÊM MỚI CHO CHỮ CHÚC MỪNG NĂM MỚI */
+        #wish-text {
+            display: none;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px #ff4600;
+            letter-spacing: 5px;
         }
 
         .touch-text {
@@ -95,7 +125,11 @@
             justify-content: center; box-shadow: 0 30px 60px rgba(0,0,0,1);
         }
         #tube::after { content: "🧧"; position: absolute; top: 40%; font-size: 2rem; opacity: 0.3; }
-        .stick { width: 10px; height: 110px; background: linear-gradient(to bottom, #ff0000, #440000); border: 1px solid #ffd700; position: absolute; top: -55px; border-radius: 3px; }
+        .stick { 
+            width: 10px; height: 110px; background: linear-gradient(to bottom, #ff0000, #440000); 
+            border: 1px solid #ffd700; position: absolute; top: -55px; border-radius: 3px; 
+            transition: transform 0.1s ease-out; /* Mượt mà khi lắc */
+        }
 
         .lixi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
         .lixi-item {
@@ -127,16 +161,31 @@
         .open-curtain .curtain-left { transform: translateX(-100%); }
         .open-curtain .curtain-right { transform: translateX(100%); }
 
+        /* --- PHẦN THÊM MỚI: HIỆU ỨNG PHÓNG TO THU NHỎ LẶP LẠI CHO CON SỐ --- */
+        #money-amount { 
+            font-size: 5rem; color: #ffd700; font-weight: 900; 
+            text-shadow: 0 0 30px #ff0000; 
+            animation: pulse-zoom 1.5s ease-in-out infinite; /* Áp dụng hiệu ứng */
+            display: block;
+        }
+
+        @keyframes pulse-zoom {
+            0% { transform: scale(1); filter: drop-shadow(0 0 20px #ff0000); }
+            50% { transform: scale(1.2); filter: drop-shadow(0 0 50px #ffd700); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 20px #ff0000); }
+        }
+        /* ------------------------------------------------------------------- */
+
         /* TÍNH NĂNG THÍCH ỨNG (RESPONSIVE) BỔ SUNG */
         @media screen and (max-width: 768px) {
             .art-title { font-size: 2rem; top: 8%; }
             #timer { font-size: 10rem; }
+            #wish-text { font-size: 1.5rem; }
             .touch-text { font-size: 1.2rem; letter-spacing: 3px; padding: 10px 25px; }
             #name-input-box, #result-card { width: 85%; padding: 20px; box-sizing: border-box; }
             .lixi-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
             #money-amount { font-size: 3.5rem; }
             #shaker-container { 
-                /* Đảm bảo hộp quẻ thích ứng trên Mobile */
                 transform: translate(-50%, -50%) scale(0.8);
                 top: 55%; 
             }
@@ -159,6 +208,7 @@
     <audio id="bg-music" loop src="nhactet.mp3"></audio>
 
     <div id="intro-screen" onclick="showNameInput()">
+        <div id="wish-text">CHÚC MỪNG NĂM MỚI</div>
         <div id="timer">5</div>
         <div class="touch-text">Chạm để khai xuân</div>
     </div>
@@ -210,7 +260,7 @@
 
     <div id="money-popup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:4000; text-align:center; width:100%;">
         <div style="font-size:2rem; color:#fff;">Lộc Tài Của Bạn:</div>
-        <div id="money-amount" style="font-size:5rem; color:#ffd700; font-weight:900; text-shadow: 0 0 30px #ff0000;"></div>
+        <div id="money-amount"></div>
         <button class="btn-gold" onclick="location.reload()">CHÚC MỪNG NĂM MỚI</button>
     </div>
 
@@ -305,14 +355,21 @@
             document.getElementById('name-input-box').style.display = 'none';
             document.getElementById('intro-screen').style.display = 'flex';
             document.querySelector('.touch-text').style.display = 'none';
+            
+            // HIỆN SỐ VÀ CHỮ CHÚC MỪNG KHI BẮT ĐẦU CHẠY
+            const timerEl = document.getElementById('timer');
+            const wishEl = document.getElementById('wish-text');
+            timerEl.style.display = 'block';
+            wishEl.style.display = 'block';
 
             let t = 5;
-            document.getElementById('timer').innerText = t;
+            timerEl.innerText = t;
             const iv = setInterval(() => {
                 t--;
-                if (t >= 0) document.getElementById('timer').innerText = t;
+                if (t >= 0) timerEl.innerText = t;
                 if(t === 0) {
                     clearInterval(iv);
+                    wishEl.style.display = 'none'; // Ẩn chữ sau khi đếm xong
                     const curtainContainer = document.getElementById('curtain-container');
                     curtainContainer.style.display = 'block';
                     setTimeout(() => {
@@ -356,21 +413,66 @@
             const cx = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
             const cy = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
             shaker.style.left = cx - offset.x + 'px'; shaker.style.top = cy - offset.y + 'px';
-            const speed = Math.sqrt(Math.pow(cx-lastX,2) + Math.pow(cy-lastY,2)) / (Date.now()-lastT);
-            if (speed > 0.7) { tube.classList.add('shaking'); playTone(120, 'square', 0.05); }
-            else tube.classList.remove('shaking');
+            
+            const dx = cx - lastX;
+            const dy = cy - lastY;
+            const speed = Math.sqrt(dx*dx + dy*dy) / (Date.now() - lastT);
+
+            // HIỆU ỨNG MỚI: Quẻ lắc lư bên trong
+            const sticks = document.querySelectorAll('.stick');
+            sticks.forEach((s, idx) => {
+                const randomSwing = (Math.random() - 0.5) * speed * 30;
+                const baseRotate = (idx - 7) * 4;
+                s.style.transform = `rotate(${baseRotate + randomSwing}deg) translateY(${-Math.min(speed*20, 30)}px)`;
+            });
+
+            if (speed > 0.7) { 
+                tube.classList.add('shaking'); 
+                playTone(120, 'square', 0.05); 
+            } else {
+                tube.classList.remove('shaking');
+                sticks.forEach((s, idx) => {
+                    const baseRotate = (idx - 7) * 4;
+                    s.style.transform = `rotate(${baseRotate}deg) translateY(0px)`;
+                });
+            }
+            
             lastX = cx; lastY = cy; lastT = Date.now();
         };
 
-        window.addEventListener('mousemove', move); window.addEventListener('mouseup', () => {isDown=false; tube.classList.remove('shaking'); if(document.getElementById('draw-btn')) document.getElementById('draw-btn').style.display='block';});
-        shaker.addEventListener('mousedown', start); shaker.addEventListener('touchstart', start); window.addEventListener('touchmove', move); window.addEventListener('touchend', () => {isDown=false; tube.classList.remove('shaking'); if(document.getElementById('draw-btn')) document.getElementById('draw-btn').style.display='block';});
+        window.addEventListener('mousemove', move); 
+        window.addEventListener('mouseup', () => {
+            isDown=false; 
+            tube.classList.remove('shaking'); 
+            if(document.getElementById('draw-btn')) document.getElementById('draw-btn').style.display='block';
+            // Trả quẻ về vị trí cũ
+            document.querySelectorAll('.stick').forEach((s, idx) => {
+                s.style.transform = `rotate(${(idx - 7) * 4}deg) translateY(0px)`;
+            });
+        });
+        
+        shaker.addEventListener('mousedown', start); 
+        shaker.addEventListener('touchstart', start); 
+        window.addEventListener('touchmove', move); 
+        window.addEventListener('touchend', () => {
+            isDown=false; 
+            tube.classList.remove('shaking'); 
+            if(document.getElementById('draw-btn')) document.getElementById('draw-btn').style.display='block';
+            document.querySelectorAll('.stick').forEach((s, idx) => {
+                s.style.transform = `rotate(${(idx - 7) * 4}deg) translateY(0px)`;
+            });
+        });
 
         function drawCard() {
             const ws = [
                 {t: "QUẺ ĐẠI CÁT: MÃ ĐÁO THÀNH CÔNG", b: "Ngựa tốt chạy đường dài, năm Bính Ngọ này vận thế của bạn bùng nổ mạnh mẽ. Sự nghiệp thăng tiến như diều gặp gió, tài lộc dồi dào gõ cửa quanh năm."},
                 {t: "QUẺ THƯỢNG CÁT: PHÚC TỰA ĐÔNG HẢI", b: "Năm mới đón nhận sinh khí mới, sức khỏe dẻo dai như linh mã. Mọi khó khăn đều có quý nhân phù trợ, tình duyên viên mãn."},
                 {t: "QUẺ TẤN LỘC: KIM NGÂN MÃN ĐƯỜNG", b: "Tiền vô như nước, bạc vàng đầy kho. Năm 2026 chính là thời điểm vàng để bạn bứt phá trong kinh doanh."},
-                {t: "QUẺ SONG HỶ: VẠN SỰ NHƯ Ý", b: "Bính Ngọ mang đến niềm vui nhân đôi. Gia đình êm ấm, sức khỏe dồi dào, tiền bạc rủng rỉnh. Chúc bạn một năm thuận buồm xuôi gió!"}
+                {t: "QUẺ SONG HỶ: VẠT SỰ NHƯ Ý", b: "Bính Ngọ mang đến niềm vui nhân đôi. Gia đình êm ấm, sức khỏe dồi dào, tiền bạc rủng rỉnh. Chúc bạn một năm thuận buồm xuôi gió!"},
+                {t: "QUẺ THỊNH VƯỢNG: AN KHANG THỊNH VƯỢNG", b: "Chúc bạn năm mới Bính Ngọ đa lộc đa tài, gia đạo bình an, vạn sự cát tường. Một năm mới ngập tràn niềm vui, công thành danh toại, vạn dặm bình an trên con đường công danh sự nghiệp."},
+                {t: "QUẺ CÁT TƯỜNG: VẠT SỰ HANH THÔNG", b: "Năm 2026 mang đến luồng sinh khí mới giúp bạn vượt qua mọi thử thách một cách dễ dàng. Chúc bạn một năm mới tấn tài tấn lộc, vạn sự như ý, sức khỏe dồi dào, luôn tươi trẻ và tràn đầy năng lượng."},
+                {t: "QUẺ MINH CHỦ: QUÝ NHÂN PHÙ TRỢ", b: "Năm Bính Ngọ là thời điểm vàng để kết giao và mở rộng quan hệ. Chúc bạn luôn gặp được tri kỷ, có quý nhân dẫn lối chỉ đường, công việc thuận lợi, tiền bạc rủng rỉnh, gia đình hạnh phúc ấm êm."},
+                {t: "QUẺ TÀI LỘC: PHÁT TÀI PHÁT LỘC", b: "Cửa nhà luôn rộn rã tiếng cười, túi tiền luôn căng đầy tài lộc. Chúc bạn năm mới buôn may bán đắt, đầu tư thắng lợi, vinh hoa phú quý gõ cửa từng nhà, phúc lộc thọ toàn, an khang trường thọ."}
             ];
             const r = ws[Math.floor(Math.random()*ws.length)];
             document.getElementById('card-title').innerText = r.t;
@@ -429,9 +531,13 @@
                     this.isMega = isMega;
                     this.targetY = isMega ? (Math.random() * canvas.height * 0.2 + 50) : (Math.random() * (canvas.height * 0.4) + 100); 
                     this.speed = isMega ? 8 : (Math.random() * 4 + 4); 
-                    this.color = isMega ? `hsl(${Math.random() * 360}, 100%, 70%)` : `hsl(${Math.random() * 360}, 100%, 60%)`; 
+                    this.color = isMega ? `hsl(${Math.random() * 360}, 100%, 70%)` : `hsl(${Math.random() * 360}, 100%, 60%)`;
+                    this.history = []; // Để vẽ đuôi lửa
                 }
                 update() { 
+                    this.history.push({x: this.x, y: this.y});
+                    if (this.history.length > 10) this.history.shift();
+                    
                     this.y -= this.speed; 
                     if (this.y <= this.targetY) { 
                         explode(this.x, this.y, this.color, this.isMega); 
@@ -440,11 +546,21 @@
                     return true; 
                 }
                 draw() { 
+                    // Vẽ đuôi lửa chạy lên
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    for(let i=this.history.length-1; i>=0; i--) {
+                        ctx.lineTo(this.history[i].x, this.history[i].y);
+                    }
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = this.isMega ? 3 : 1.5;
+                    ctx.stroke();
+
                     ctx.save();
                     ctx.shadowBlur = 10;
                     ctx.shadowColor = this.color;
                     ctx.fillStyle = this.color; 
-                    ctx.fillRect(this.x, this.y, this.isMega ? 4 : 2, this.isMega ? 15 : 10); 
+                    ctx.fillRect(this.x - (this.isMega ? 2 : 1), this.y, this.isMega ? 4 : 2, this.isMega ? 15 : 10); 
                     ctx.restore();
                 }
             }
